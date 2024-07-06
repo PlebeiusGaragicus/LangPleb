@@ -3,9 +3,6 @@ from pydantic import BaseModel
 from schemas import OpenAIChatMessage
 import requests
 
-import asyncio
-from typing import Callable, Awaitable, Any
-
 
 # from subprocess import call
 
@@ -41,12 +38,12 @@ class Pipeline:
 
     def __init__(self):
         # the name of the pipeline (AKA construct) in the UI
-        self.name = "echobot"
+        self.name = "LilChain"
 
         # Initialize
         self.valves = self.Valves(
             **{
-                "number": "1"
+                "FavoriteNumber": "7"
                 # "pipelines": ["*"],                                 # Connect to all pipelines
                 # "DB_HOST": os.environ["PG_HOST"],                   # Database hostname
                 # "DB_PORT": os.environ["PG_PORT"],                   # Database port 
@@ -66,16 +63,15 @@ class Pipeline:
         print(f"unloading pipeline: {self.name}")
 
 
-    async def pipe(self, __event_emitter__: Callable[[dict], Awaitable[None]],
-             user_message: str, model_id: str, messages: List[dict], body: dict) -> Union[str, Generator, Iterator]:
+    def pipe(self, user_message: str, model_id: str, messages: List[dict], body: dict) -> Union[str, Generator, Iterator]:
         # This is where you can add your custom pipelines like RAG.
         print("laying our pipe out here!")
 
 
 
         if body.get("title", False):
-            print("Title Generation")
-            return "We fuck pipes, yo!"
+            print("Generating a title for this LilChain thread")
+            return "LilChain"
 
 
         else:
@@ -88,64 +84,8 @@ class Pipeline:
 
                 print("######################################")
 
-                await __event_emitter__(
-                {
-                    "type": "status",
-                    "data": {
-                        "status": "in_progress",
-                        "description": "Retrieving user data",
-                        "done": False,
-                    },
-                })
-
-                await asyncio.sleep(4)
-
-                await __event_emitter__(
-                {
-                    "type": "status",
-                    "data": {
-                        "status": "complete",
-                        "description": "User data retrieved successfully",
-                        "done": True,
-                    },
-                })
-
-
-
-            # commands = user_message.split(" ")
-
-            # payload = {
-            #     "model": MODEL,
-            #     "messages": [
-            #         {
-            #             "role": "system",
-            #             "content": f"You are an agent of the AppleScript Pipeline. You have the power to control the volume of the system.",
-            #         },
-            #         {"role": "user", "content": user_message},
-            #     ],
-            #     "stream": body["stream"],
-            # }
-
-            # try:
-            #     r = requests.post(
-            #         url=f"{OLLAMA_BASE_URL}/v1/chat/completions",
-            #         json=payload,
-            #         stream=True,
-            #     )
-
-            #     r.raise_for_status()
-
-            #     if body["stream"]:
-            #         return r.iter_lines()
-            #     else:
-            #         return r.json()
-
             try:
-                # return "..."
-                return """
-```sh
-echo "Hello, I am an echo bot. You said: {user_message}"
-```
-"""
+                return "nothing yet..."
+
             except Exception as e:
                 return f"Error: {e}"
